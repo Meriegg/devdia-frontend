@@ -1,5 +1,6 @@
 import React from "react";
 import { MantineProvider } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 
 interface Props {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ const MantineLibProvider: React.FC<Props> = ({ children }) => {
       withGlobalStyles
       withNormalizeCSS
     >
-      {children}
+      <NotificationsProvider>{children}</NotificationsProvider>
     </MantineProvider>
   );
 };
