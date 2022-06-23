@@ -8,7 +8,8 @@ export default onError(({ graphQLErrors, networkError }) => {
         title: "Error!",
         message: message,
         color: "red",
-        autoClose: false,
+        autoClose: 7000,
+        radius: "md",
       })
     );
 
@@ -17,7 +18,8 @@ export default onError(({ graphQLErrors, networkError }) => {
       title: "Network Error!",
       message: "We couldn't connect to our server, please try again!",
       color: "red",
-      autoClose: false,
+      autoClose: 7000,
+      radius: "md",
     });
   }
 });
