@@ -1,20 +1,20 @@
 import React from "react";
+import useGlobalContext from "../../hooks/useGlobalContext";
 import Link from "next/link";
+import { useMutation } from "@apollo/client";
+import { LOGIN_MUTATION } from "../../graphql/mutations";
+import { useFormik } from "formik";
+import type { NextPage } from "next";
 import {
-  createStyles,
-  Text,
+  Anchor,
+  Button,
   Input,
   InputWrapper,
   PasswordInput,
-  Button,
-  Anchor,
+  Text,
+  createStyles,
 } from "@mantine/core";
-import useGlobalContext from "../../hooks/useGlobalContext";
 import { useRouter } from "next/router";
-import { useMutation } from "@apollo/client";
-import { REGISTER_MUTATION } from "../../graphql/mutations";
-import { useFormik } from "formik";
-import type { NextPage } from "next";
 import * as yup from "yup";
 
 const useStyles = createStyles((theme) => ({
@@ -43,21 +43,19 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const Register: NextPage = () => {
+const LoginPage: NextPage = () => {
   const [hasSubmitted, setSubmitted] = React.useState<boolean>(false);
   const router = useRouter();
   const state = useGlobalContext();
-  const [register] = useMutation(REGISTER_MUTATION);
+  const [login] = useMutation(LOGIN_MUTATION);
   const { classes } = useStyles();
 
   const initialValues = {
-    email: "",
-    password: "",
-    username: "",
+    email: "ya.boybeats1234@gmail.com",
+    password: "123456789",
   };
 
   const validationSchema = yup.object().shape({
-    username: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().required().min(9),
   });
@@ -67,14 +65,14 @@ const Register: NextPage = () => {
     validationSchema,
     validateOnChange: hasSubmitted,
     onSubmit: (values) => {
-      register({
+      login({
         variables: {
           args: { ...values },
         },
         onCompleted: (data) => {
           console.log(data);
-          state.setUserData(data?.register?.userData);
-          state.setAccessToken(data?.register?.accessToken);
+          state.setUserData(data?.login?.userData);
+          state.setAccessToken(data?.login?.accessToken);
           router.push("/");
         },
         onError(error) {
@@ -86,8 +84,8 @@ const Register: NextPage = () => {
 
   return (
     <div className={classes.mainContainer}>
-      <h1 className={classes.heading}>Register to continue!</h1>
-      <Text>follow the steps and create your account to continue!</Text>
+      <h1 className={classes.heading}>Log in to continue!</h1>
+      <Text>follow the steps and log into your account to continue!</Text>
 
       <form
         onSubmit={(e) => {
@@ -98,15 +96,6 @@ const Register: NextPage = () => {
         }}
         className={classes.form}
       >
-        <InputWrapper error={errors?.username} required label={"Username"}>
-          <Input
-            placeholder={"ex: johnDoes69"}
-            value={values.username}
-            onChange={handleChange("username")}
-            invalid={!!errors?.username}
-          />
-        </InputWrapper>
-
         <InputWrapper error={errors?.email} required label={"Email"}>
           <Input
             placeholder={"ex: johndoe69@johndoe.com"}
@@ -129,8 +118,8 @@ const Register: NextPage = () => {
           <Button type="submit" style={{ width: "fit-content" }}>
             Continue!
           </Button>
-          <Anchor href={"/auth/login"} component={Link}>
-            <a className={classes.link}>Have an account? Log in</a>
+          <Anchor href={"/auth/register"} component={Link}>
+            <a className={classes.link}>Don't Have an account? Register</a>
           </Anchor>
         </div>
       </form>
@@ -138,4 +127,4 @@ const Register: NextPage = () => {
   );
 };
 
-export default Register;
+export default LoginPage;

@@ -2,6 +2,7 @@ import React, { createContext } from "react";
 import { UserType } from "../types";
 
 export const myContext = createContext<any>({});
+export let ContextRef = React.createRef<any>();
 
 interface Props {
   children: React.ReactNode;
@@ -17,6 +18,8 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
     userData,
     setUserData,
   };
+
+  React.useImperativeHandle(ContextRef, () => value);
 
   return <myContext.Provider value={value}>{children}</myContext.Provider>;
 };
